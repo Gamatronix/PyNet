@@ -504,3 +504,155 @@ CLASS OUTLINE
    D. You decide what characteristics matters [4:07]
    E. Zero errors [5:03]
    F. Integrate with CI [5:16]
+
+
+Lesson3 / Conditionals and Loops
+
+Nota: hay una tabla de contenido para cada video en la parte inferior de este correo electrónico, incluidas las marcas de tiempo de la ubicación de varios contenidos. Esto debería ser útil para navegar por los videos.
+
+En este correo electrónico de Learning Python vamos a cubrir lo siguiente
+
+Condicionales
+Vídeo https://vimeo.com/245104620
+ 
+Lógica booleana (booleanos, operador ternario, ninguno)
+Vídeo https://vimeo.com/245112558
+
+Python para bucles
+Vídeo https://vimeo.com/245466297
+
+Para bucles (enumerar)
+Vídeo https://vimeo.com/245477015
+
+For Loops (Break and Continue)
+Vídeo https://vimeo.com/245478016
+
+Mientras bucles
+Vídeo https://vimeo.com/245545155
+
+Bucles varios
+Vídeo https://vimeo.com/245552604
+
+Additional Content:
+
+How To Write Conditional Statements in Python 3
+https://www.digitalocean.com/community/tutorials/how-to-write-conditional-statements-in-python-3-2?__s=3ni96cruswv2a37bmlax
+How To Construct For Loops in Python 3
+https://www.digitalocean.com/community/tutorials/how-to-construct-for-loops-in-python-3?__s=3ni96cruswv2a37bmlax
+How To Construct While Loops in Python
+https://www.digitalocean.com/community/tutorials/how-to-construct-while-loops-in-python-3?__s=3ni96cruswv2a37bmlax
+
+Ejercicios
+
+El código de referencia para estos ejercicios está publicado en GitHub en:
+    https://github.com/ktbyers/pynet/tree/master/learning_python/lesson3
+
+
+1. Lea el archivo "show_vlan.txt" en su programa. Recorra las líneas de este archivo y extraiga todas las combinaciones de VLAN_ID, VLAN_NAME. A partir de estos VLAN_ID y VLAN_NAME, construya una nueva lista en la que cada elemento de la lista sea una tupla que consta de (VLAN_ID, VLAN_NAME). Imprima esta estructura de datos en la pantalla. Su salida debe tener el siguiente aspecto:
+[('1', 'predeterminado'),
+ ('400', 'azul400'),
+ ('401', 'azul401'),
+ ('402', 'azul402'),
+ ('403', 'azul403')]
+
+2. Lea el contenido del archivo "show_arp.txt". Usando un ciclo for, itere sobre las líneas de este archivo. Procese las líneas del archivo y separe ip_addr y mac_addr para cada entrada en una variable separada.
+
+Agregue una declaración condicional que busque '10.220.88.1'. Si se encuentra 10.220.88.1, imprima la cadena "IP/Mac de puerta de enlace predeterminada" y la dirección IP y la dirección MAC correspondientes.
+
+Usando una declaración condicional, busque también '10.220.88.30'. Si se encuentra esta dirección IP, imprima "Arista3 IP/Mac is" y las correspondientes ip_addr y mac_addr.
+
+Realice un seguimiento de si ha encontrado tanto la puerta de enlace predeterminada como el conmutador Arista3. Una vez que haya encontrado ambos dispositivos, 'salga' del bucle for.
+
+
+3. Lea el archivo 'show_lldp_neighbors_detail.txt'. Recorra las líneas de este archivo. Siga leyendo las líneas hasta que haya encontrado el "Nombre del sistema" remoto y la "Id. de puerto" remota. Guarde estos dos elementos en variables e imprímalos en la pantalla. Debe extraer solo el nombre del sistema y la identificación del puerto de las líneas (es decir, sus variables solo deben tener 'twb-sf-hpsw1' y '15'). Salga de su bucle una vez que haya recuperado estos dos elementos.
+
+
+4. Tiene la siguiente estructura de datos:
+tabla_arp = [('10.220.88.1', '0062.ec29.70fe'),
+ ('10.220.88.20', 'c89c.1dea.0eb6'),
+ ('10.220.88.21', '1c6a.7aaf.576c'),
+ ('10.220.88.28', '5254.aba8.9aea'),
+ ('10.220.88.29', '5254.abbe.5b7b'),
+ ('10.220.88.30', '5254.ab71.e119'),
+ ('10.220.88.32', '5254.abc7.26aa'),
+ ('10.220.88.33', '5254.ab3a.8d26'),
+ ('10.220.88.35', '5254.abfb.af12'),
+ ('10.220.88.37', '0001.00ff.0001'),
+ ('10.220.88.38', '0002.00ff.0001'),
+ ('10.220.88.39', '6464.9be8.08c8'),
+ ('10.220.88.40', '001c.c4bf.826a'),
+ ('10.220.88.41', '001b.7873.5634')]
+
+Recorra esta estructura de datos y extraiga todas las direcciones MAC. Procese todas las direcciones MAC para obtener un formato estándar. Imprima toda la nueva dirección MAC estandarizada en la pantalla. El formato estandarizado debe ser el siguiente:
+
+00:62:EC:29:70:FE
+
+Los dígitos hexadecimales deben estar en mayúscula. Además, debe haber dos puntos entre cada octeto en la dirección MAC.
+
+
+5. [Opcional/bonificación]
+
+*** Tenga en cuenta que para probar esto en su entorno, cambie las direcciones IP de prueba a algo en su entorno que pueda hacer ping con éxito. ***
+
+Construya una lista de 254 direcciones IP. La dirección IP base debe ser igual a '10.10.100.0' o '10.10.100.'.
+
+Debe usar el 'rango' incorporado para lograr esto.
+
+Su lista debe tener todas las direcciones IP de 10.10.100.1 a 10.10.100.254.
+
+Use la 'enumeración' de Python para imprimir todas las direcciones IP y su índice de lista correspondiente. La salida debe ser similar a la siguiente:
+0 ---> 10.10.100.1
+1 ---> 10.10.100.2
+2 ---> 10.10.100.3
+3 ---> 10.10.100.4
+4 ---> 10.10.100.5
+...
+
+Use un segmento de lista para crear una nueva lista que vaya de 10.10.100.3 a 10.10.100.6.
+
+Usando un bucle y os.system("ping -c 3 10.10.100.3") intente hacer ping a todas las direcciones IP en esta breve lista. Para Windows, el comando probablemente sea os.system("ping -n 3 10.10.100.3").
+
+Coloque una variable en la parte superior para definir si está utilizando Windows o Linux/MacOs. Esto debería ser similar a lo siguiente:
+VENTANAS = Falso
+
+base_cmd_linux = 'ping -c 2'
+base_cmd_windows = 'ping -n 2'
+# operador ternario
+base_cmd = base_cmd_windows si WINDOWS si no base_cmd_linux
+
+
+
+
+
+
+ESQUEMA DE LA CLASE
+ 
+
+1. Condicionales (VIDEO1)
+   A. Estructura de los condicionales de Python [0:10]
+   B. ¿Qué es una expresión en Python [1:54]
+   C. Ejemplo de declaración if [2:47]
+   D. Ejemplo de declaración if usando una variable [3:35]
+   E. Ejemplo de declaración if/else [5:08]
+   F. Ejemplo de declaración if/elif/else [5:43]
+
+2. Lógica Booleana (Booleanos, Operador Ternario, Ninguno) (VIDEO2)
+   A. Lógica booleana
+      1. Verdadero y verdadero (lógico y) [0:41]
+      2. Verdadero o Falso (lógico o) [1:06]
+      3. no es cierto [1:17]
+   B. Construir expresiones más complejas [1:27]
+   C. Conversión de otros tipos de datos para que sean booleanos [2:24]
+   D. Cómo evalúa Python otros tipos de datos [2:39]
+   E. Encasillamiento con bool [4:10]
+   F. Operador ternario de Python [5:00]
+   G. Ninguno [7:22]
+      1. Valor de retorno predeterminado para las funciones de Python [7:46]
+
+3. Python para bucles (VIDEO3)
+   A. Significado general de los bucles [0:03]
+   B. Significado de bucles for [0:29]
+      1. Ejemplo de bucle [1:25]
+
+4. For Loops (Enumerar) (VIDEO4)
+   A. Valor del loop-vari

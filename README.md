@@ -931,3 +931,113 @@ CLASS OUTLINE
    C. re.findall()   [3:38]
  
  
+[PyNet] - Netmiko4: send_command_timing
+
+This article was originally published on June 30th, 2022.
+
+This article is part of my periodic mailings on Python and Network Automation. In these articles, I try to provide information that is useful to network engineers who are automating tasks in their environment. Note, this content is not directly a part of the Learning Python course.
+
+![image](https://user-images.githubusercontent.com/31605766/177573235-ab7a1f16-aad7-4257-b9bb-1fe1c59702e7.png)
+
+ 
+Netmiko has two fundamental ways for gathering show output: send_command() and send_command_timing().
+send_command() is an entirely pattern-based solution—it looks for the expect_string that you specify or alternatively it looks for the trailing prompt. I discussed Netmiko4 and send_command here.
+
+send_command_timing() on the other hand is an entirely timing based solution. It does not look for nor care about any pattern in the output. It basically tries to intelligently guess whether the device is done outputting.
+
+While send_command() is the more valuable of the two methods, there are cases where having a timing based solution is valuable.
+
+For example:
+
+with ConnectHandler(**device) as conn:
+    data = ""
+    commands = [
+        "ping", 
+        "\n", 
+        "8.8.8.8", 
+        "\n", 
+        "\n", 
+        "\n", 
+        "\n", 
+        "\n"
+    ]
+    for cmd in commands:
+        data += conn.send_command_timing(
+            cmd, 
+            strip_command=False,
+            strip_prompt=False
+        )
+    print(data) 
+ 
+Here we are doing an extended ping which prompts us for several things as part of the process.
+
+If we used send_command(), we would need to specify an expect_string for each prompt. This would be tedious and it is probably easier just to use send_command_timing and a list of commands (as we did above).
+
+Note, in Netmiko4, you can also use send_multiline or send_multiline_timing to handle this type of multiline prompting.
+
+ 
+
+How does send_command_timing actually operate?
+We can visualize the core of send_command_timing as follows:
+
+![image](https://user-images.githubusercontent.com/31605766/177573697-cfbf2bf1-e672-4fb5-a821-bf14811fb15f.png)
+
+
+PDF of Diagram: https://t.dripemail2.com/c/eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZXRvdXIiLCJpc3MiOiJtb25vbGl0aCIsInN1YiI6ImRldG91cl9saW5rIiwiaWF0IjoxNjU3MDk5ODU4LCJuYmYiOjE2NTcwOTk4NTgsImFjY291bnRfaWQiOiI0MjU0NDk3IiwiZGVsaXZlcnlfaWQiOiJmZjBqdXlqdmhjMHptaWJjNDFxbSIsInVybCI6Imh0dHBzOi8vcHluZXQudHdiLXRlY2guY29tL3N0YXRpYy9wZGYvc2VuZF9jb21tYW5kX3RpbWluZ19mbG93Y2hhcnQucGRmP19fcz0zbmk5NmNydXN3djJhMzdibWxheCJ9.XKhvPa_zay_ubvwsNvVNPzilmdoK3mMRIfh5_KVekj8
+
+Looking at the diagram, we can see that send_command_timing first sends the command down the SSH channel and then starts a timer.
+
+send_command_timing then enters its main loop where it is waiting for data from the device. As long as there is no data, Netmiko will keep looping and reading, with a 0.1 second sleep on each loop.
+
+Eventually, if no data ever arrives, Netmiko will give up and raise a ReadTimeout. By default this timeout will occur in 120 seconds (this can be set using the 'read_timeout' argument).
+
+Typically, however, when you send a command, there will be some output.
+
+In this case, Netmiko will keep reading the data (as long as more data arrives every 0.1 seconds). Once Netmiko detects there is no more NEW data, and then it switches to last_read mode.
+
+Once you are performing this last_read, Netmiko will sleep longer. Here Netmiko is trying to ensure that all available data has been read. Consequently, it waits a bit longer to ensure nothing new arrives.
+
+You can control the length of this last_read time by setting the last_read argument. last_read defaults to two seconds.
+
+Once Netmiko does this last read, it then checks if this last read is empty or not. If there is data (i.e. it is not empty), then Netmiko says "oooops" and returns back to the main reading loop. Basically, there is more output data to process so let's keep reading.
+
+Ultimately Netmiko will keep repeating this process until either: 1) read_timeout expires, or 2) there is no new data on the last read. If there is no new data on the last read, Netmiko returns all the data previously read.
+
+ 
+How can you modify send_command_timing's behavior?
+
+There are three main ways that you can control the behavior of send_command_timing: 1) increase last_read, 2) modify read_timeout, 3) set read_timeout=0.
+
+def send_command_timing(
+    self,
+    command_string: str,
+    last_read: float = 2.0,
+    read_timeout: float = 120.0
+    # A bunch of other arguments
+)
+
+If you are running into cases where you are not capturing all the data you require, then you should increase the last_read time.
+
+data = conn.send_command_timing(
+    "ping 8.8.8.8",
+    last_read=8.0
+) 
+Basically, some commands will have output gaps that are longer than the two second default. In these cases, you should set last_read to be longer than the longest gaps in the output. Determining this might require some trial-and-error.
+
+The downside of increasing last_read is that it will meaningfully slowdown send_command_timing.
+
+If, instead, you are executing a command that is continuously outputting data for a long period of time and you're running into the ReadTimeout exception, then you should increase read_timeout.
+
+data = conn.send_command_timing(
+    "show ip bgp",
+    read_timeout=600
+) 
+
+Finally, if you never want Netmiko to cease reading due to a read_timeout, then you can set read_timeout=0. In this case, Netmiko will keep reading until last_read completes successfully.
+
+data = conn.send_command_timing(
+    "show ip bgp",
+    read_timeout=0
+) 
+
+Regards,

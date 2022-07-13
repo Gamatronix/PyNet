@@ -1148,8 +1148,6 @@ Set a breakpoint and run your code to the breakpoint.
 Use '!command' to change a variable (for example !new_mac = [])
 
 
-
-
 CLASS OUTLINE
 
 1. Functions (Part1) (VIDEO1)
@@ -1204,8 +1202,11 @@ CLASS OUTLINE
       
    
  
+ 
+ 
 This article was originally published on July 7th, 2022.
 
+ 
 This article is part of my periodic mailings on Python and Network Automation. In these articles, I try to provide information that is useful to network engineers who are automating tasks in their environment. Note, this content is not directly a part of the Learning Python course.
 
 ![image](https://user-images.githubusercontent.com/31605766/178773865-7d581c29-b9d1-4944-8acf-928e7c9bf9d3.png)

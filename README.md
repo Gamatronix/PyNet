@@ -1204,3 +1204,198 @@ CLASS OUTLINE
       
    
  
+This article was originally published on July 7th, 2022.
+
+This article is part of my periodic mailings on Python and Network Automation. In these articles, I try to provide information that is useful to network engineers who are automating tasks in their environment. Note, this content is not directly a part of the Learning Python course.
+
+![image](https://user-images.githubusercontent.com/31605766/178773865-7d581c29-b9d1-4944-8acf-928e7c9bf9d3.png)
+
+One pattern that Netmiko users frequently implement is a series of try/except statements to handle various errors that occur during the initial Netmiko connection.
+
+ 
+
+try:
+    conn = ConnectHandler(**device)
+except NetmikoAuthenticationException:
+    # do something / log failure
+    return
+except NetmikoTimeoutException:
+    # do something / log failure
+    return
+except Exception:
+    # Unknown exception: do something / log failure
+    return
+
+# The connection succeeded!
+print(conn.find_prompt()) 
+
+This pattern is so common that I created a new Netmiko factory function that replicates this boilerplate code.
+
+This new Netmiko entry point is named ConnLogOnly.
+
+import sys
+from netmiko import ConnLogOnly
+
+# device dictionary not shown
+conn = ConnLogOnly(**device)
+if conn is None:
+    # Errors will be logged in 'netmiko.log'
+    sys.exit("Logging in failed")
+
+print(conn.find_prompt())
+conn.disconnect() 
+
+ConnLogOnly is a replacement for ConnectHandler and operates similarly. It takes all of the standard Netmiko connection arguments and returns a Netmiko object of the properly class with an established connection.
+
+ConnLogOnly will automatically handle all connection exceptions (unlike ConnectHandler). In other words, you should never receive an unhandled connection exception when invoking ConnLogOnly().
+
+Instead of receiving an exception, ConnLogOnly will either return: 1) a Netmiko connection object, or 2) None.
+
+A value of None indicates that the connection failed.
+
+Any exceptions that occurred during the connection process will be automatically logged. By default this will be to a file named "netmiko.log".
+
+ 
+
+Okay, okay, would you just give me some examples already?
+ 
+import sys
+from netmiko import ConnLogOnly
+
+device1 = {
+    "host": "cisco3.domain.com",
+    "username": "admin",
+    "password": "cisco123",
+    "device_type": "cisco_ios",
+}
+
+conn = ConnLogOnly(**device1)
+if conn is None:
+    sys.exit("Logging in failed")
+
+print("\nWorking case:\n")
+print(conn.find_prompt())
+conn.disconnect() 
+
+Executing this code yields:
+
+$ python example.py 
+
+Working case:
+
+cisco3# 
+
+In this case the connection worked, and we printed out the device's prompt.
+
+
+
+But what happens when the connection fails?
+Here we change our password to an invalid value and then re-execute our code.
+
+$ cat example.py | grep password
+    "password": "invalid",
+
+$ python example.py
+Logging in failed
+
+$ echo $?
+1 
+
+We can see that our connection failed.
+
+Now let's check the "netmiko.log" file.
+
+$ date
+Thu Jun 30 15:08:46 PDT 2022
+
+# Yep, that file was just updated.
+$ ls -ltr netmiko.log 
+-rw-rw-r-- 1 ktbyers ktbyers 8788 Jun 30 15:07 netmiko.log
+
+$ tail -25 netmiko.log 
+
+# Only showing the last entry in the log file.
+2022-06-30 15:07:11,203 ERROR netmiko.ssh_dispatcher 
+Authentication failure to: cisco3.domain.com:22 (cisco_ios)
+
+Authentication to device failed.
+
+Common causes of this problem are:
+1. Invalid username and password
+2. Incorrect SSH-key file
+3. Connecting to the wrong device
+
+Device settings: cisco_ios cisco3.domain.com:22
+
+
+Authentication failed.
+We can see that our authentication failed and Netmiko provides us some details about the error.
+
+
+
+What happens if we fail in a different way—let's try an invalid DNS name.
+ 
+
+$ grep host example.py
+    "host": "cisco3.bogus.com",
+
+$ python example.py 
+Logging in failed
+
+$ date
+Thu Jun 30 15:13:35 PDT 2022
+
+$ ls -ltr netmiko.log 
+-rw-rw-r-- 1 ktbyers ktbyers 9018 Jun 30 15:13 netmiko.log
+
+$ tail netmiko.log 
+# Only last log entry shown
+2022-06-30 15:13:29,624 ERROR netmiko.ssh_dispatcher Device failed due to a 
+DNS failure, hostname cisco3.bogus.com
+
+Once again we can see that we failed to connect and that an error was logged to our "netmiko.log" file.
+
+
+
+What are some other things we can configure using ConnLogOnly?
+Using ConnLogOnly you can configure the log file name, specify the logging level, and specify the log file format.
+
+Note, all of these arguments are optional.
+
+def ConnLogOnly(
+    log_file: str = "netmiko.log",
+    log_level: Optional[int] = None,
+    log_format: Optional[str] = None,
+    **kwargs: Any,
+) -> Optional["BaseConnection"]: 
+
+Here we override the default log_file name:
+
+conn = ConnLogOnly(log_file="my_file.txt", **device1)
+if conn is None:
+    sys.exit("Logging in failed")
+
+And we can change the default logging level:
+
+import logging
+from netmiko import ConnLogOnly
+
+device1 = { 
+    "host": "cisco3.domain.com",
+    "username": "admin",
+    "password": "invalid",
+    "device_type": "cisco_ios",
+}
+
+conn = ConnLogOnly(log_level=logging.DEBUG, **device1)
+if conn is None:
+    sys.exit("Logging in failed")
+
+
+
+
+What outstanding issues are there with ConnLogOnly?
+Currently, ConnLogOnly only allows you to specify your log file name, log level, or log formatting a single time in a given Python program. This issue is tracked here.
+
+Additionally, ConnLogOnly does not support the use of a context manager. This also implies that you must explicitly call Netmiko's disconnect() method when you are done using your Netmiko connection object.
+

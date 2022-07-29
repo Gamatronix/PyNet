@@ -1201,9 +1201,9 @@ CLASS OUTLINE
       2. Quick feedback loop   [8:15]
       
    
- 
- 
- 
+[Pynet] - Netmiko4: ConnLogOnly
+
+
 This article was originally published on July 7th, 2022.
 
  
@@ -1399,4 +1399,402 @@ What outstanding issues are there with ConnLogOnly?
 Currently, ConnLogOnly only allows you to specify your log file name, log level, or log formatting a single time in a given Python program. This issue is tracked here.
 
 Additionally, ConnLogOnly does not support the use of a context manager. This also implies that you must explicitly call Netmiko's disconnect() method when you are done using your Netmiko connection object.
+
+
+[PyNet Learning Python] - Lesson6 / Netmiko
+
+Note: There is a table of contents for each video at the bottom of this email including timestamps to where various content is located. This should be helpful in navigating the videos.
+
+
+﻿In this email of Learning Python we are going to cover the following:
+ 
+Netmiko Introduction and Basics 
+Video link https://vimeo.com/254569911
+Length is 8 minutes
+ 
+Netmiko Show Commands
+Video link https://vimeo.com/254578980
+Length is 13 minutes
+ 
+Netmiko and Prompting
+Video link https://vimeo.com/254587832
+Length is 12 minutes
+ 
+Netmiko and TextFSM
+Video link https://vimeo.com/254611876
+Length is 10 minutes
+ 
+Netmiko Config Changes
+Video link https://vimeo.com/254614073
+Length is 8 minutes
+ 
+Netmiko Troubleshooting
+Video link https://vimeo.com/254786724
+Length is 9 minutes
+
+
+Additional Content:
+
+Netmiko Readme
+
+Netmiko Examples
+
+Netmiko Tutorial
+This tutorial is a bit old, but still should be generally correct.
+
+
+Exercises
+
+Reference code for these exercises is posted on GitHub at:
+    https://github.com/ktbyers/pynet/tree/master/learning_python/lesson6
+
+Note, you will need some sort of a network device to work on these exercises. This can be a virtual or physical device. Make sure you are only working on test or lab devices.
+
+
+1. Using Netmiko, establish a connection to a network device and print out the device's prompt.
+
+
+2. Use send_command() to send a show command down the SSH channel. Retrieve the results and print the results to the screen.
+
+
+3. Find a command on your device that has additional prompting. Use send_command_timing to send the command down the SSH channel. Capture the output and handle the additional prompting.
+
+
+4. Use send_config_set() and send_config_from_file() to make configuration changes. 
+
+The configuration changes should be benign. For example, on Cisco IOS I typically change the logging buffer size. 
+
+As part of your program verify that the configuration change occurred properly. For example, use send_command() to execute 'show run' and verify the new configuration.
+
+
+5. Optional, use send_command() in conjunction with ntc-templates to execute a show command. Have TextFSM automatically convert this show command output to structured data.
+
+
+6. Optional, connect to three networking devices one after the other. Use send_command() to execute a show command on each of these devices. Print this output to the screen.
+
+
+
+CLASS OUTLINE
+1. Netmiko Introduction and Basics (VIDEO1)
+   A. Netmiko overview   [00:05]
+      1. Alternate libraries   [00:36]
+      2. Netmiko supported platforms   [1:00]
+   B. Establishing a connection   [2:02]
+      1. device_type   [3:35]
+      2. Passing connection arguments using a dictionary   [5:00]
+ 
+2. Netmiko Show Commands (VIDEO2)
+   A. Using the .enable() method   [00:47]
+   B. Executing show commands   [4:14]
+      1. Command echo, trailing prompt are removed   [5:42]
+      2. Executing multiple commands in sequence   [6:35]
+   C. Changing the terminating search pattern   [7:48]
+   D. Other platforms (Arista, Juniper)   [8:57]
+      1. Convert to a loop structure   [10:26]
+ 
+3. Netmiko and Prompting (VIDEO3)
+   A. Multiline commands (i.e. additional prompting)   [00:36]
+      1. Handling of additional prompting   [1:16]
+   B. Commands that take longer than expected   [6:53]
+      1. Using delay_factor   [9:13]
+      2. Using global_delay_factor   [10:11]
+ 
+4. Netmiko and TextFSM (VIDEO4)
+   A. Integrating to TextFSM   [1:23]
+      1. Using ntc-templates   [2:03]
+      2. How to use TextFSM in Netmiko   [2:17]
+      3. How Netmiko finds the templates   [4:20]
+         a. Use 'git clone' for installation   [5:25]
+      4. Listing of templates   [6:22]
+      5. Using an environment variable   [7:34]
+ 
+5. Netmiko and Config Changes (VIDEO5)
+   A. Making configuration changes   [00:05]
+      1. How to use send_config_set()   [1:28]
+      2. Juniper commit() example   [2:39]
+      3. Separate 'write memory' is required   [4:25]
+
+6. Netmiko Troubleshooting (VIDEO6)
+   A. Logging all reads and writes   [0:40]
+   B. Using write_channel() and read_channel()   [3:50]
+   C. Misc items   [6:55]
+      1. Secure Copy   [6:59]
+      2. Telnet and Serial support   [7:32]
+      3. Terminal server   [8:19]
+ 
+ 
+ 
+ 
+ [PyNet Learning Python] - Lesson7 / Jinja2, YAML and JSON
+ 
+ ﻿In this email of Learning Python we are going to cover the following:
+ 
+Jinja2 Basics
+Video link https://vimeo.com/257997257
+Length is 7 minutes
+ 
+Jinja2 For-Loops and Conditionals
+Video link https://vimeo.com/257999160
+Length is 9 minute
+ 
+Jinja2 and CSV
+Video link https://vimeo.com/258142987
+Length is 5 minutes
+ 
+Jinja2 Dictionaries and Nested Loops
+Video link https://vimeo.com/258145504
+Length is 11 minutes
+ 
+YAML Basics
+Video link https://vimeo.com/258161182
+Length is 9 minutes
+ 
+YAML Part2
+Video link https://vimeo.com/258169427
+Length is 10 minutes
+ 
+Using Python to Write YAML
+Video link https://vimeo.com/258171559
+Length is 3 minutes
+ 
+JSON
+Video link https://vimeo.com/258178243
+Length is 5 minutes
+ 
+Managing Data Structures
+Video link https://vimeo.com/258181273
+Length is 5 minutes
+
+
+
+Additional Content:
+
+Jinja2 Documentation
+http://t.dripemail2.com/c/eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZXRvdXIiLCJpc3MiOiJtb25vbGl0aCIsInN1YiI6ImRldG91cl9saW5rIiwiaWF0IjoxNjU4ODI3NzgxLCJuYmYiOjE2NTg4Mjc3ODEsImFjY291bnRfaWQiOiI0MjU0NDk3IiwiZGVsaXZlcnlfaWQiOiJ4YndjbjNrZGNtaHhocDBlcGx2OCIsInVybCI6Imh0dHA6Ly9qaW5qYS5wb2Nvby5vcmcvZG9jcy8yLjEwL3RlbXBsYXRlcy8_X19zPTNuaTk2Y3J1c3d2MmEzN2JtbGF4In0.cfb3t-Oy8LPZOeACvZT4QgnTrxdh2tykwMsCGODNBn4
+
+YAML Syntax Basics
+http://t.dripemail2.com/c/eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZXRvdXIiLCJpc3MiOiJtb25vbGl0aCIsInN1YiI6ImRldG91cl9saW5rIiwiaWF0IjoxNjU4ODI3NzgxLCJuYmYiOjE2NTg4Mjc3ODEsImFjY291bnRfaWQiOiI0MjU0NDk3IiwiZGVsaXZlcnlfaWQiOiJ4YndjbjNrZGNtaHhocDBlcGx2OCIsInVybCI6Imh0dHA6Ly9kb2NzLmFuc2libGUuY29tL2Fuc2libGUvbGF0ZXN0L1lBTUxTeW50YXguaHRtbD9fX3M9M25pOTZjcnVzd3YyYTM3Ym1sYXgifQ.SsCfOF76yXZZg8HcllfnvM9U9GmfiXMpg4_Sq6iiLfk
+
+
+
+Exercises
+
+Reference code for these exercises is posted on GitHub at:
+    https://github.com/ktbyers/pynet/tree/master/learning_python/lesson7
+
+
+
+1a. Use Jinja2 templating to render the following:
+vlan 
+   name 
+
+Your template should be inside of your Python program for simplicity.
+
+The output from processing your template should be as follows. This should be printed to stdout.
+vlan 400
+   name red400
+
+1b. Using a conditional in a Jinja2 template, generate the following output:
+crypto isakmp policy 10
+ encr aes
+ authentication pre-share
+ group 5
+crypto isakmp key my_key address 1.1.1.1 no-xauth
+crypto isakmp keepalive 10 periodic
+
+The encryption of aes, and the Diffie-Hellman group should be variables in the template.
+
+Additionally this entire ISAKMP section should only be added if the isakmp_enable variable is set to True.
+
+Your template should be inside your Python program for simplicity.
+
+
+1c. Using Jinja2 templating and a for-loop inside the template, generate the following configuration snippet:
+vlan 501
+   name blue501
+vlan 502
+   name blue502
+vlan 503
+   name blue503
+vlan 504
+   name blue504
+vlan 505
+   name blue505
+vlan 506
+   name blue506
+vlan 507
+   name blue507
+vlan 508
+   name blue508
+
+Your template should be inside your Python program for simplicity.
+
+It is fine for your VLAN IDs to be out of order in the generated configuration (for example, VLAN ID 508 can come before VLAN ID 504).
+
+
+2. Using Python and Jinja2 templating generate the following OSPF configuration:
+interface vlan 1
+   ip ospf priority 100
+
+router ospf 10
+   passive-interface default
+   no passive-interface Vlan1
+   no passive-interface Vlan2
+   network 10.10.10.0/24 area 0.0.0.0
+   network 10.10.20.0/24 area 0.0.0.0
+   network 10.10.30.0/24 area 0.0.0.0
+   max-lsa 12000
+
+The following items should be variables in your Jinja2 template:
+​ospf_process_id
+ospf_priority
+ospf_active_interfaces (i.e. the non-passive interfaces)
+ospf_area0_networks (the three networks that are specified as belonging to area0)
+
+Your template should be in an external file.
+
+Your template should also use a conditional to control whether this is output or not:
+interface vlan 1
+   ip ospf priority 100
+
+If the 'ospf_priority variable is defined', then include that section. If 'ospf_priority' is not defined then only include the 'router ospf 10' section.
+
+
+3a. Create a YAML file that defines a list of interface names. Use the expanded form of YAML.
+
+Use a Python script to read in this YAML list and print it to the screen.
+
+The output of your Python script should be:
+['Ethernet1', 'Ethernet2', 'Ethernet3', 'Ethernet4', 'Ethernet5', 'Ethernet6', 'Ethernet7', 'Management1', 'Vlan1']
+
+
+3b. Expand the data structure defined earlier in exercise3a. This time you should have an 'interfaces' key that refers to a dictionary.
+
+Use Python to read in this YAML data structure and print this to the screen.
+
+The output of your Python script should look as follows (in other words, your YAML data structure should yield the following when read by Python). You YAML data structure should be written in expanded YAML format.
+
+{'interfaces': {
+    'Ethernet1': {'mode': 'access', 'vlan': 10},
+    'Ethernet2': {'mode': 'access', 'vlan': 20},
+    'Ethernet3': {'mode': 'trunk',
+                  'native_vlan': 1,
+                  'trunk_vlans': 'all'}
+    }
+}
+​
+4. Take the YAML file and corresponding data structure that you defined in exercise3b:
+{'interfaces': {
+    'Ethernet1': {'mode': 'access', 'vlan': 10},
+    'Ethernet2': {'mode': 'access', 'vlan': 20},
+    'Ethernet3': {'mode': 'trunk',
+                  'native_vlan': 1,
+                  'trunk_vlans': 'all'}
+    }
+}
+
+From this YAML data input source, use Jinja templating to generate the following configuration output:
+
+interface Ethernet1
+  switchport mode access
+  switchport access vlan 10
+interface Ethernet2
+  switchport mode access
+  switchport access vlan 20
+interface Ethernet3
+  switchport mode trunk
+  switchport trunk native vlan 1
+  switchport trunk allowed vlan all
+
+The following should all be variables in your Jinja template (the names may be different than below, but they should be variabilized and not be hard-coded in your template).
+interface_name
+switchport_mode
+access_vlan
+native_vlan
+trunk_vlans
+
+All your Jinja2 variables should be retrieved from your YAML file. 
+
+This exercise might be challenging.
+
+
+
+CLASS OUTLINE
+
+1. Jinja2 Basics (VIDEO1)
+   A. What is Jinja2?   [00:11]
+      1. Jinja2 is also used in Ansible   [2:11]
+   B. Jinja2 basic use   [2:22] 
+      1. Cisco configuration example   [2:33]
+      2. Variables embedded using    [3:57]
+      3. Expanding to more variables   [5:17]
+
+2. Jinja2 For-loops and Conditionals (VIDEO2)
+   A. Decoupling the template from the code   [00:08]
+   B. Jinja2 and for-loops   [2:10]
+      1. Embedding a for-loop in the template   [2:40]
+      2. Controlling whitespace   [5:16]
+   C. Jinja2 and conditionals   [6:35]
+      1. How much logic in a Jinja2 template   [7:47]
+
+3. Jinja2 and a CSV File (VIDEO3)
+   A. Reading data from an external CSV source   [00:06]
+      1. Using CSV DictReader   [1:12]
+      2. Adding additional CSV rows   [3:17]
+
+4. Jinja2 dictionaries and nested for-loops (VIDEO4)
+   A. Looping over Jinja2 dictionaries using .items()   [1:22]
+   B. Looping over Jinja2 lists   [3:24]
+   C. Jinja2 nested for-loops   [4:31]
+   D. Jinja2 nested conditionals   [7:58]
+   E. Jinja2 dictionaries accessing keys   [9:36]
+
+5. YAML Basics (VIDEO5)
+   A. Introduction to YAML   [00:04]
+      1. Why do we care about YAML?   [00:18]
+      2. What is serialization?   [00:38]
+      3. YAML is used in Ansible and Salt   [2:27]
+   B. Basic YAML
+      1. Creating a list   [2:57]
+      2. Creating a dictionary   [6:20]
+
+6. YAML Part2 (VIDEO6)
+   A. YAML basic data types   [00:12]
+      1. Strings   [00:15]
+      2. Quoting strings   [00:43]
+      3. Booleans   [1:22]
+      4. Integers   [3:16]
+   B. YAML and complex data structures   [3:43]
+      1. Dictionaries containing dictionaries   [3:52]
+      2. Dictionaries containing lists   [6:21]
+   C. YAML expanded form and compressed form   [8:03]
+      1. YAML is a superset of JSON   [8:17]
+
+7. Writing YAML using Python (VIDEO7)
+
+8. JSON (VIDEO8)
+   A. What is JSON?   [00:02]  
+   B. Comparing Python to JSON   [2:09]
+   C. Writing JSON out to a file   [1:44]
+   D. Reading JSON in Python   [3:39]
+   E. Talking about APIs and JSON   
+      1. Why do we care about JSON?   [4:29]
+      2. Some APIs that use JSON (Arista eAPI, NX-API)   [4:35]
+      3. REST APIs frequently use JSON   [4:49]
+
+9. Managing Data Structures (VIDEO9)
+   A. Complex data structures   [00:35]
+      1. Dictionaries that contain lists or dictionaries   
+      2. Lists that contains dictionaries or lists   
+   B. Handling complex data structures   [1:19]
+      1. Peeling back a layer at a time   [2:03]
+         a. Dictionaries   [2:17]
+         b. Lists   [3:34]    
+   C. Creating complex data structures in Python   [4:51]
+   
+   
+   
+   
+
+
 
